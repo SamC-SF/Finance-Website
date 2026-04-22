@@ -1,0 +1,216 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinAI</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 10%;
+  background: #020617;
+}
+
+header h1 { color: #38bdf8; }
+
+nav a {
+  margin: 0 12px;
+  cursor: pointer;
+}
+
+nav a:hover { color: #38bdf8; }
+
+.page {
+  display: none;
+  padding: 40px 10%;
+}
+
+.active {
+  display: block;
+}
+
+/* CHAT PANEL */
+.panel {
+  position: fixed;
+  right: -400px;
+  top: 0;
+  width: 350px;
+  height: 100%;
+  background: #111827;
+  padding: 15px;
+  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+  border-left: 2px solid #38bdf8;
+}
+
+.panel.active { right: 0; }
+
+.chat {
+  flex: 1;
+  overflow-y: auto;
+  margin: 10px 0;
+}
+
+.msg {
+  padding: 8px;
+  margin: 5px 0;
+  border-radius: 6px;
+}
+
+.user { background: #1e293b; text-align: right; }
+.ai { background: #38bdf8; color: black; }
+
+input, select {
+  padding: 10px;
+  margin: 5px 0;
+  width: 100%;
+}
+
+button {
+  padding: 10px;
+  background: #38bdf8;
+  border: none;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>FinAI</h1>
+  <nav>
+    <a onclick="showPage('retirement')">Retirement</a>
+    <a onclick="showPage('investments')">Investments</a>
+    <a onclick="showPage('careers')">Careers</a>
+    <a onclick="showPage('banking')">Banking</a>
+  </nav>
+</header>
+
+<!-- RETIREMENT -->
+<div id="retirement" class="page active">
+  <h2>Retirement Planning</h2>
+  <p>Plan long-term wealth using AI projections, IRAs, and 401(k).</p>
+  <button onclick="openAI('retirement')">Open AI Assistant</button>
+</div>
+
+<!-- INVESTMENTS -->
+<div id="investments" class="page">
+  <h2>Investments</h2>
+  <input id="stockInput" placeholder="Search ETF (VOO, SPY)">
+  <button onclick="searchStock()">Search</button>
+  <p id="stockResult"></p>
+  <button onclick="openAI('investments')">Open AI Assistant</button>
+</div>
+
+<!-- CAREERS -->
+<div id="careers" class="page">
+  <h2>Career Test</h2>
+  <select id="interest">
+    <option value="tech">Tech</option>
+    <option value="finance">Finance</option>
+    <option value="creative">Creative</option>
+  </select>
+  <button onclick="careerTest()">Find Career</button>
+  <p id="careerResult"></p>
+  <button onclick="openAI('careers')">Open AI Assistant</button>
+</div>
+
+<!-- BANKING -->
+<div id="banking" class="page">
+  <h2>Banking Dashboard</h2>
+  <p>Track your spending and savings (demo mode).</p>
+  <ul>
+    <li>Balance: $5,200</li>
+    <li>Monthly Spending: $1,200</li>
+    <li>Savings Rate: 35%</li>
+  </ul>
+  <button onclick="openAI('banking')">Open AI Assistant</button>
+</div>
+
+<!-- AI PANEL -->
+<div id="panel" class="panel">
+  <button onclick="closeAI()">Close</button>
+  <h3 id="aiTitle">AI</h3>
+  <div id="chat" class="chat"></div>
+  <input id="input" placeholder="Ask something...">
+  <button onclick="sendMsg()">Send</button>
+</div>
+
+<script>
+let mode = "retirement";
+
+function showPage(page) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById(page).classList.add("active");
+}
+
+function openAI(type) {
+  mode = type;
+  document.getElementById("panel").classList.add("active");
+  document.getElementById("aiTitle").innerText = type + " AI";
+  document.getElementById("chat").innerHTML = "";
+}
+
+function closeAI() {
+  document.getElementById("panel").classList.remove("active");
+}
+
+function sendMsg() {
+  let input = document.getElementById("input");
+  let text = input.value;
+  if (!text) return;
+
+  addMsg("user", text);
+  let response = fakeAI(text);
+  setTimeout(() => addMsg("ai", response), 500);
+
+  input.value = "";
+}
+
+function fakeAI(text) {
+  if (mode === "retirement") return "Focus on long-term investing and compounding.";
+  if (mode === "investments") return "Diversify with ETFs like VOO or QQQ.";
+  if (mode === "careers") return "Build high-income skills like coding or finance.";
+  if (mode === "banking") return "Track spending and automate savings.";
+  return "Ask something else.";
+}
+
+function addMsg(type, text) {
+  let div = document.createElement("div");
+  div.className = "msg " + type;
+  div.innerText = text;
+  document.getElementById("chat").appendChild(div);
+}
+
+function searchStock() {
+  let val = document.getElementById("stockInput").value;
+  document.getElementById("stockResult").innerText =
+    "Showing ETF info for " + val + " (connect real API next)";
+}
+
+function careerTest() {
+  let val = document.getElementById("interest").value;
+  let result = {
+    tech: "Software Engineer",
+    finance: "Investment Banker",
+    creative: "Designer"
+  };
+  document.getElementById("careerResult").innerText = result[val];
+}
+</script>
+
+</body>
+</html>
+```
